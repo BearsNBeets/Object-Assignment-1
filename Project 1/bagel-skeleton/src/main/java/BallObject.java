@@ -7,8 +7,8 @@ public class BallObject {
     private Image ballImage = new Image("res/ball.png");
     private final Vector2 gravity = new Vector2(0,0.15);
 
-    //Calculate position of ball at next frame using velocity and current location
-    public Vector2 nextVelocity(Point currentBallLocation, Vector2 velocity){
+    //Calculate vector for total gravity on ball at next frame
+    public Vector2 nextGravity(Point currentBallLocation, Vector2 velocity){
         Vector2 pointAsVector = currentBallLocation.asVector();
         velocity = velocity.add(gravity);
         return velocity;
