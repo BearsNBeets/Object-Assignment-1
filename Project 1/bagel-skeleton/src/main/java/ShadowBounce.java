@@ -55,13 +55,15 @@ public class ShadowBounce extends AbstractGame{
         //Reload ball if no on screen and mouse is clicked
         if (input.wasPressed(MouseButtons.LEFT) && (currentBallLocation.y > Window.getHeight() || currentBallLocation.y < 0)) {
             currentBallLocation = defaultPoint;
+            velocity = gravity;
             ball.getBallImage().draw(currentBallLocation.x, currentBallLocation.y);
         } else {
             ball.getBallImage().draw(currentBallLocation.x, currentBallLocation.y);
         }
-        currentBallLocation = ballObject.nextPoint(currentBallLocation,velocity);
-
-
+        System.out.println(velocity.toString());
+        velocity = ballObject.nextVelocity(currentBallLocation,velocity);
+        currentBallLocation = velocity.add(currentBallLocation.asVector()).asPoint();
+        
 
     }
 }
