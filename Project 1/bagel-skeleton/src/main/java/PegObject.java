@@ -1,18 +1,20 @@
 import bagel.Image;
 import bagel.util.Point;
+import bagel.util.Rectangle;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PegObject {
     private Image pegImage = new Image("res/peg.png");
-    private final int HALFPEGIMAGESIZE = 16;
+    private Boolean collided = false;
     //Initialise a new random point for a peg
-    private Point randomPoint = new Point(randomLocation('x'), randomLocation('y'));
+    private Point point = new Point(randomLocation('x'), randomLocation('y'));
 
     //Generate a random x value or y value
     private double randomLocation(char axis){
         double newLocation = 0;
         //Generate random value for y
+        int HALFPEGIMAGESIZE = 16;
         if (axis == 'y'){
             int maxHeight = 768 - HALFPEGIMAGESIZE;
             int minHeight = 100;
@@ -34,13 +36,25 @@ public class PegObject {
         return newLocation;
     }
 
+    public Rectangle boundingBox(){
+        return pegImage.getBoundingBoxAt(point);
+    }
+
     //Random point for peg getter
-    public Point getRandomPoint() {
-        return randomPoint;
+    public Point getPoint() {
+        return point;
     }
 
     //Peg image getter
     public Image getPegImage() {
         return pegImage;
+    }
+
+    public Boolean getCollided() {
+        return collided;
+    }
+
+    public void setCollided(Boolean collided) {
+        this.collided = collided;
     }
 }

@@ -5,25 +5,24 @@ import bagel.util.Vector2;
 
 public class ShadowBounce extends AbstractGame{
     private static final int NUMBEROFPEGS = 50;
-    private Point[] allPegPoints = new Point[NUMBEROFPEGS];
-    private boolean[] allPegCollisions = new boolean[NUMBEROFPEGS];
+    private PegObject[] allPegPoints = new PegObject[NUMBEROFPEGS];
     private static final Point defaultPoint = new Point(512, 32);
     private Point currentBallLocation = new Point(-40,-40);
     private final Vector2 gravity = new Vector2(0,0.15);
     private Vector2 velocity = gravity;
+    private BallObject ball = new BallObject();
 
     //Initialise random location of 50 pegs on screen
     private void spawnAllPegs(){
         for (int i = 0; i < NUMBEROFPEGS; i++){
-            PegObject peg = new PegObject();
-            allPegPoints[i] = peg.getRandomPoint();
-            allPegCollisions[i] = false;
+            allPegPoints[i] = new PegObject();
         }
     }
 
     //Initialise all peg locations before running game
     private ShadowBounce(){
         spawnAllPegs();
+
     }
 
     //Run game
@@ -36,21 +35,20 @@ public class ShadowBounce extends AbstractGame{
     @Override
     protected void update(Input input) {
         //Draw ball object and rectangle for collision detection
-        BallObject ball = new BallObject();
-        Rectangle ballRectangle = ball.getBallImage().getBoundingBoxAt(currentBallLocation);
+
+        Rectangle ballRectangle = ball.boundingBox(currentBallLocation);
 
         //Check whether collisions occur and only load images which don't have collisions
         for (int i = 0; i < NUMBEROFPEGS; i++){
-            if (allPegCollisions[i]){
+            if (allPegPoints[i].getCollided()){
                 continue;
             }
             //Draw peg and rectangle for collision detection
-            PegObject peg = new PegObject();
-            peg.getPegImage().draw(allPegPoints[i].x, allPegPoints[i].y);
-            Rectangle pegRectangle = peg.getPegImage().getBoundingBoxAt(allPegPoints[i]);
+            allPegPoints[i].getPegImage().draw(allPegPoints[i].getPoint().x, allPegPoints[i].getPoint().y);
+            Rectangle pegRectangle = allPegPoints[i].boundingBox();
             //Record which pegs have collided with ball to ensure they aren't drawn again
             if (ballRectangle.intersects(pegRectangle)){
-                allPegCollisions[i] = true;
+                allPegPoints[i].setCollided(true);
             }
         }
 
@@ -58,7 +56,7 @@ public class ShadowBounce extends AbstractGame{
 
         //Reload ball if not on screen and mouse is clicked
         if (input.wasPressed(MouseButtons.LEFT) && (currentBallLocation.y > Window.getHeight() || currentBallLocation.y < 0)) {
-            System.out.println("Respawned ball");
+            //System.out.println("Respawned ball");
             currentBallLocation = defaultPoint;
 
             //Calculate new velocity of ball depending on mouse position. Divide vector to mouse into increments of 10
