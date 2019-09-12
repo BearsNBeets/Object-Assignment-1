@@ -6,34 +6,19 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class PegObject {
     private static final Image pegImage = new Image("res/peg.png");
-    private Point point = new Point(randomLocation('x'), randomLocation('y'));
+    private Point point = randomLocation();
     private Boolean collided = false;
     private Rectangle boundingBox = pegImage.getBoundingBoxAt(point);
 
-    //Generate a random x value or y value
-    private double randomLocation(char axis){
-        double newLocation;
-        int HALFPEGIMAGESIZE = 16;
-        //Generate random value for y
-        if (axis == 'y'){
-            int maxHeight = 768 - HALFPEGIMAGESIZE;
-            int minHeight = 100;
-            newLocation = ThreadLocalRandom.current().nextInt(minHeight, maxHeight);
-            //If part of the image goes beyond the top edge, regenerate random y value
-            while (newLocation - HALFPEGIMAGESIZE < 0){
-                newLocation = ThreadLocalRandom.current().nextInt(minHeight, maxHeight);
-            }
-        //Generate random value for x
-        } else {
-            int maxWidth = 1024 - HALFPEGIMAGESIZE;
-            int minWidth = 0;
-            newLocation = ThreadLocalRandom.current().nextInt(minWidth, maxWidth);
-            //If part of the image goes beyond the left edge, regenerate random x value
-            while (newLocation - HALFPEGIMAGESIZE < 0){
-                newLocation = ThreadLocalRandom.current().nextInt(minWidth, maxWidth);
-            }
-        }
-        return newLocation;
+    //Generate a random point (x, y)
+    private Point randomLocation(){
+        int HALF_PEG_IMAGE_SIZE = 16;
+        int maxHeight = 768 - HALF_PEG_IMAGE_SIZE;
+        int minHeight = 100;
+        int maxWidth = 1024 - HALF_PEG_IMAGE_SIZE;
+        int minWidth = 0;
+        return new Point(ThreadLocalRandom.current().nextInt(minWidth + HALF_PEG_IMAGE_SIZE, maxWidth),
+                ThreadLocalRandom.current().nextInt(minHeight, maxHeight));
     }
 
     //Draw peg in Window
